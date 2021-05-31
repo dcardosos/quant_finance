@@ -64,18 +64,3 @@ colnames(volume) <- accepted_ticks
 write.zoo(prices, file = 'data/prices.csv', sep = ',')
 write.zoo(volume, file = 'data/volume.csv', sep = ',')
 """
-get_returns <- function(x, type = 'arithmetic',  period = 'monthly'){
-  
-  periodReturn(get(x)[, glue('{x}.Adjusted')], period = period, subset=NULL, type=type, leading = TRUE)
-  
-}
-
-
-# percent returns 
-pct_returns <- map(accepted_ticks, ~get_returns(.x))
-
-# log returns
-log_returns <- map(accepted_ticks, ~get_returns(.x, 'log'))
-
-
-map(accepted_ticks, ~get_returns(.x, period = 'yearly'))
