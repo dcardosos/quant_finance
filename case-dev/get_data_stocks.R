@@ -59,8 +59,24 @@ volume <- reduce(volume, merge)
 
 colnames(volume) <- accepted_ticks 
 
+
+# extract data of ^BVSP
+
+bvsp <- '^BVSP'
+
+getSymbols(bvsp, src = 'yahoo',
+           
+           from='2010-12-01', to='2020-02-01', 
+           
+           periodicity='monthly')
+
+df_bvsp <- map('BVSP', ~Ad(get(.x)))
+
+df_bvsp <- reduce(df_bvsp, merge)  
+
 # export results
 """
 write.zoo(prices, file = 'data/prices.csv', sep = ',')
 write.zoo(volume, file = 'data/volume.csv', sep = ',')
+write.zoo(df_bvsp, file = 'data/ibov.csv', sep = ',')
 """
