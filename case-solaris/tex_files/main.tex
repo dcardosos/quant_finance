@@ -1,0 +1,92 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry, amsmath, latexsym, amssymb, graphicx}
+
+\geometry{margin = 1in, headsep = 0.25in}
+
+\parskip 12pt
+
+\begin{document}
+
+\title{Case Solaris}
+\author{Douglas Cardoso}
+\maketitle
+
+\textbf{1. Se pudesse ajudar Susan a entender o que houve, como você explicaria?}
+
+O cálculo da volatilidade (risco) da carteira foi feito de forma errada. Em um portfólio, a variação da carteira não é simplesmente a soma de todas as variações das ações subjacentes, visto que temos a correlação entre os ativos, isto é, podem se mover juntos ou em direções opostas, que influencia o risco do portfólio. Assim, o cálculo correto para a volatilidade de um portfólio é:
+
+$$
+\sigma_{pf}^2 = w_1^2 \sigma_1^2 + w_2^2 \sigma_2^2 + 2w_1 w_2\sigma_{1,2}$$
+
+Para entender melhor a fórmula, podemos reescrevê-la em formato matricial
+
+\begin{equation*}
+\sigma_{pf}^2 = 
+\begin{bmatrix}
+w_1 & w_2
+\end{bmatrix}
+\begin{bmatrix}
+\sigma_1^2 & \sigma_{1,2}\\
+\sigma_{2,1} & \sigma_2^2
+\end{bmatrix}
+\begin{bmatrix}
+w_1\\
+w_2
+\end{bmatrix}
+\end{equation*}
+
+Nessa equação, temos os pesos transpostos multiplicado pela matriz de covariância vezes os pesos dos ativos. A matriz de covariância abriga a variância entre os ativos na diagonal e a covariância entre os ativo 1 e 2 fora da diagonal ($\sigma_{1,2}$). 
+
+
+
+\textbf{2. Salve a Midas Capital. Ajude Susan e Gauss a compreenderem o acontecido para não cometerem novamente. O que pode ter acontecido?}
+
+Susan e Gauss estão analisando tempos diferentes, isto é, o \textit{backtest} foi feito em um período de ~6 anos, mas eles estão analisando resultados de curto prazo. A depender do \textit{zoom in} que utilizamos para analisar a curva do gráfico dado, veríamos que no período de semanas ou meses, os ativos variam bastante e nem sempre para cima. Essa assimetria de "janela dos tempo" analisada pode dar a impressão de que a estratégia não está funcionando, mas é necessário analisr o longo prazo. Além disso, para obter um retrato melhor e mais detalhado, seria necessário, dentre outros cálculos:
+
+\begin{itemize}
+	\item Medir o \textit{maximum drawdown} e suas durações;
+	\item Entender os riscos sistemáticos e os riscos idiossincráticos relativo a cada ativo;
+	\item Medir o VaR e o CVaR histórico da estratégia;
+	\item Ter um benchmark para comparar os retornos da estratégia a este.
+\end{itemize}
+
+
+\textbf{3. Nova Abordagem.}
+
+\textbf{(a) A contribuição de risco de cada ativo ao portfólio foi calculada corretamente?}
+
+Não. A verdadeira contribuição de risco de cada ativo ao portfólio é 
+
+\begin{center}
+\begin{tabular}{ c r }
+	      & Risk Contribution\\ 
+ \hline
+ Ativo\_1 & 0.000994\\
+ Ativo\_2 & 0.001142\\ 
+ Ativo\_3 & 0.006664\\ 
+ Ativo\_4 & 0.008496\\  
+ Ativo\_5 & 0.001430\\ 
+ Ativo\_6 & 0.001812    
+\end{tabular}
+\end{center}
+
+\textit{O código está no arquivo .ipynb passado no email.}
+
+\textbf{(b) Qual deve ser portfolio $w$ que faz com que a contribuição de risco seja igual para todos os ativos?}
+
+\begin{center}
+\begin{tabular}{ c r }
+	      & Optimal Weights\\ 
+ \hline
+ Ativo\_1 & 0.168625\\
+ Ativo\_2 & 0.157328\\ 
+ Ativo\_3 & 0.162022\\ 
+ Ativo\_4 & 0.171272\\  
+ Ativo\_5 & 0.174323\\ 
+ Ativo\_6 & 0.166429    
+\end{tabular}
+\end{center}
+
+\textit{O código está no arquivo .ipynb passado no email.}
+\end{document}
